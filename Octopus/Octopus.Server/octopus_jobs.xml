@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This file contains job definitions in schema version 2.0 format -->
+
+<job-scheduling-data xmlns="http://quartznet.sourceforge.net/JobSchedulingData" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0">
+
+  <processing-directives>
+    <overwrite-existing-data>true</overwrite-existing-data>
+  </processing-directives>
+
+  <schedule>
+
+    <job>
+      <name>sqlSiteCodeProcedureCallJob</name>
+      <group>DEFAULT</group>
+      <description>job to call SQL procedure with site code parameter</description>
+      <job-type>Octopus.Jobs.SqlProcedureSiteCodeJob, Octopus.Jobs.SqlProcedureSiteCode</job-type>
+      <durable>true</durable>
+      <recover>false</recover>
+      <job-data-map>
+        <entry>
+          <key>connectionString</key>
+          <value>user id=sa; password=Superuser; server=192.168.138.24\r22008; database=sedg_web_dev; connection timeout=10; MultipleActiveResultSets=True</value>
+        </entry>
+        <entry>
+          <key>storedProcedureName</key>
+          <value>AGENTSP_POPULATE_KPI_TABLES</value>
+        </entry>
+        <entry>
+          <key>siteCode</key>
+          <value>SITE_AU_R73</value>
+        </entry>
+      </job-data-map>
+    </job>
+
+
+    <trigger>
+      <simple>
+        <name>sqlSiteCodeProcedureCallTrigger</name>
+        <group>DEFAULT</group>
+        <description>Simple trigger to fire SQL procdure call job</description>
+        <job-name>sqlSiteCodeProcedureCallJob</job-name>
+        <job-group>DEFAULT</job-group>
+        <misfire-instruction>SmartPolicy</misfire-instruction>
+        <repeat-count>-1</repeat-count>
+        <repeat-interval>10000</repeat-interval>
+      </simple>
+    </trigger>
+  </schedule>
+</job-scheduling-data>
